@@ -15,11 +15,8 @@ environ.Env.read_env()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-SECRET_KEY = env('SECRET_KEY')
-
 # SECURITY WARNING: keep the secret key used in production secret!
-with open(os.path.join(BASE_DIR, 'secret_key.txt')) as f:
-    SECRET_KEY = f.read().strip()
+SECRET_KEY = env('SECRET_KEY')
 
 # # HTTPS Settings
 # SESSION_COOKIE_SECURE = True
@@ -33,7 +30,7 @@ with open(os.path.join(BASE_DIR, 'secret_key.txt')) as f:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -62,9 +59,8 @@ AUTHENTICATION_BACKENDS = (
     'app.backends.CaseInsensitiveModelBackend',
 )
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'https://shotokan-united-frontend-git-master-alphys-projects-4020a73e.vercel.app']
 
-APPEND_SLASH=False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -116,8 +112,6 @@ DATABASES = {
     'default': dj_database_url.parse(env('DATABASE_URL'))
 }
 
-# if ENVIRONMENT == 'production' or POSTGRESS_LOCALLY == True:
-#     DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 
 # Password validation
@@ -155,7 +149,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'assets')
 MEDIA_URL = 'assets/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

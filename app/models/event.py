@@ -27,7 +27,7 @@ class Event(BaseModel):
     venue = models.CharField(max_length=200)
     date = models.DateField()
     description = models.TextField()
-    poster_image = models.ImageField(upload_to='assets/images/poster_images/', null=True, blank=True)
+    poster_image = models.ImageField(upload_to='images/poster_images/', null=True, blank=True)
 
 
     def __str__(self):
