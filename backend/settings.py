@@ -59,7 +59,7 @@ AUTHENTICATION_BACKENDS = (
     'app.backends.CaseInsensitiveModelBackend',
 )
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'https://shotokan-united-frontend-git-master-alphys-projects-4020a73e.vercel.app']
+CORS_ALLOWED_ORIGINS = ['https://shotokan-united-frontend.vercel.app']
 
 
 MIDDLEWARE = [
