@@ -59,7 +59,7 @@ AUTHENTICATION_BACKENDS = (
     'app.backends.CaseInsensitiveModelBackend',
 )
 
-CORS_ALLOWED_ORIGINS = ['https://shotokan-united-frontend.vercel.app']
+CORS_ALLOWED_ORIGINS = [' http://localhost:5173', 'https://shotokan-united-frontend.vercel.app']
 
 
 MIDDLEWARE = [
@@ -148,9 +148,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
+STATICFILE_DIRS = [os.path.join(BASE_DIR, "static"),]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'assets')
-MEDIA_URL = 'assets/'
+MEDIA_URL = '/assets/'
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type
