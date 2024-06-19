@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
 from .models import  Account
 from rest_framework import permissions, viewsets, status
 from .serializers import UserSerializer
@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate, login
 import pyrebase
 import environ
 
+
+User = get_user_model() 
 
 env = environ.Env()
 environ.Env.read_env()
