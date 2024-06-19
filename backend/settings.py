@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -49,14 +49,15 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'app',
+    'accounts',
 
     'rest_framework.authtoken'
 ]
 
-AUTH_USER_MODEL = 'app.Account'
+AUTH_USER_MODEL = 'accounts.Account'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
-    'app.backends.CaseInsensitiveModelBackend',
+    'accounts.backends.CaseInsensitiveModelBackend',
 )
 
 CORS_ALLOWED_ORIGINS = ['https://shotokan-united-frontend.vercel.app']
@@ -107,12 +108,12 @@ if DEBUG:
         }
     }
 
-# Render postgress database
-if not DEBUG:
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(env('DATABASE_URL'))
-    }
+# # Render postgress database
+# if not DEBUG:
+#     import dj_database_url
+#     DATABASES = {
+#         'default': dj_database_url.parse(env('DATABASE_URL'))
+#     }
 
 
 

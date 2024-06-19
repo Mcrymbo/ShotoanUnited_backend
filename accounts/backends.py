@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
-from app.models import Account
+from .models import Account
 
 
 class CaseInsensitiveModelBackend(ModelBackend):
