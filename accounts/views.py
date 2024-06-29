@@ -1,74 +1,69 @@
-from django.contrib.auth import get_user_model
-from .models import  Account
+from django.contrib.auth import get_user_model, authenticate, login
+from django.shortcuts import render
 from rest_framework import permissions, viewsets, status
-from .serializers import UserSerializer
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate, login
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+
+from .serializers import CustomTokenObtainPairSerializer
 import pyrebase
 import environ
 
-
-User = get_user_model() 
+User = get_user_model()
 
 env = environ.Env()
 environ.Env.read_env()
 
 firebase = pyrebase.initialize_app({
-"apiKey": env('API_KEY'),
-"authDomain": env('AUTH_DOMAIN'),
-"projectId": env('PROJECT_ID'),
-"storageBucket": env('STORAGE_BUCKET'),
-"messagingSenderId": env('MESSAGING_SENDER_ID'),
-"appId": env('APP_ID'),
-"measurementId": env('MEASUREMENT_ID'),
-"databaseURL": ""
+    "apiKey": env('API_KEY'),
+    "authDomain": env('AUTH_DOMAIN'),
+    "projectId": env('PROJECT_ID'),
+    "storageBucket": env('STORAGE_BUCKET'),
+    "messagingSenderId": env('MESSAGING_SENDER_ID'),
+    "appId": env('APP_ID'),
+    "measurementId": env('MEASUREMENT_ID'),
+    "databaseURL": ""
 })
 storage = firebase.storage()
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = Account.objects.all()
-    serializer_class = UserSerializer
+@api_view(['POST'])
+def check_username_exists(request):
+    username = request.data.get('username')
+    if not username:
+        return Response({'error': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
-    permission_classes = [permissions.AllowAny]
+    try:
+        User.objects.get(username=username)
+        return Response({'username_exists': True}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'username_exists': False}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
-    def register(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
-    def login(self, request):
-        username = request.data.get('email')
-        password = request.data.get('password')
-        user = authenticate(request, username=username, password=password)
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
-        if user:
-            login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
-    def upload_profile_pic(self, request):
-        user = request.user
-        profile_pic = request.FILES.get('profile_pic')
+    def post(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(email=request.data.get('email'))
+            if not user.is_active:
+                return Response({'detail': 'Account not activated'}, status=status.HTTP_401_UNAUTHORIZED)
+            if hasattr(user, 'is_deactivated') and user.is_deactivated:
+                return Response({'detail': 'Account deactivated'}, status=status.HTTP_401_UNAUTHORIZED)
+        except User.DoesNotExist:
+            return Response({'detail': 'Invalid username or password'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if user and profile_pic:
-            filename = f"profile_pics/{user.id}_{profile_pic.name}"
-            try:
-                storage.child(filename).put(profile_pic)
-                user.profile_image = storage.child(filename).get_url(None)
-                user.save()
-                return Response({'message': 'Profile picture uploaded successfully'}, status=status.HTTP_200_OK)
-            except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            return Response({'error': 'User or profile pic file not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        return super().post(request, *args, **kwargs)
+
+
+def send_activation_email(user):
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    activation_url = f'http://localhost:5173/auth/activate/?uid={uid}&token={token}'
+    print(f'Activation URL: {activation_url}')
