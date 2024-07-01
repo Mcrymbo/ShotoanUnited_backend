@@ -25,6 +25,13 @@ def upload_profile_picture(profile_pic):
         url = storage.child(f"profile_pics/{profile_pic.name}").get_url(None)
         return url
 
+# Helper function to upload cover photo
+def upload_cover_photo(cover_photo):
+    with cover_photo.open() as img:
+        storage.child(f"cover_photo/{cover_photo.name}").put(img)
+        url = storage.child(f"cover_photo/{cover_photo.name}").get_url(None)
+        return url
+
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -35,12 +42,22 @@ class ProfileViewSet(viewsets.ModelViewSet):
             profile_pic_url = upload_profile_picture(self.request.FILES['profile_pic'])
             profile_instance.profile_pic_url = profile_pic_url
             profile_instance.save()
+        
+        if 'cover_photo' in self.request.FILES:
+            cover_photo_url = upload_cover_photo(self.request.FILES['cover_photo'])
+            profile_instance.profile_pic_url = cover_photo_url
+            profile_instance.save()
 
     def perform_update(self, serializer):
         profile_instance = serializer.save()
         if 'profile_pic' in self.request.FILES:
             profile_pic_url = upload_profile_picture(self.request.FILES['profile_pic'])
             profile_instance.profile_pic_url = profile_pic_url
+            profile_instance.save()
+        
+        if 'cover_photo' in self.request.FILES:
+            cover_photo_url = upload_cover_photo(self.request.FILES['cover_photo'])
+            profile_instance.profile_pic_url = cover_photo_url
             profile_instance.save()
 
 

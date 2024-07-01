@@ -92,7 +92,7 @@ class Profile(models.Model):
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True)
     cover_photo= models.ImageField(upload_to='cover_pics', blank=True)
     profile_pic_url = models.URLField(max_length=200, blank=True)
-    cover_photo_url = models.URLField(max_length=200, blank=True)
+    cover_photo_url = models.URLField(max_length=200, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Override save method to upload profile pic to Firebase Storage
@@ -120,8 +120,8 @@ class Profile(models.Model):
             cover_photo_url = storage.child(f"cover_photo/{file_name}").get_url(None)
 
             # Update the profile_pic_url field with the URL
-            self.cover_photo_ur =  cover_photo_url
+            self.cover_photo_url =  cover_photo_url
 
-            self.cover_photo_ur = None
+            self.cover_photo = None
 
         super().save(*args, **kwargs)
