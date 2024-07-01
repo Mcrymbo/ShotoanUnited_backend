@@ -11,26 +11,37 @@ from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
+from .models import Profile, storage
+from .serializers import ProfileSerializer
+
 from .serializers import CustomTokenObtainPairSerializer
-import pyrebase
-import environ
 
 User = get_user_model()
 
-env = environ.Env()
-environ.Env.read_env()
+# Helper function to upload profile
+def upload_profile_picture(profile_pic):
+    with profile_pic.open() as img:
+        storage.child(f"profile_pics/{profile_pic.name}").put(img)
+        url = storage.child(f"profile_pics/{profile_pic.name}").get_url(None)
+        return url
 
-firebase = pyrebase.initialize_app({
-    "apiKey": env('API_KEY'),
-    "authDomain": env('AUTH_DOMAIN'),
-    "projectId": env('PROJECT_ID'),
-    "storageBucket": env('STORAGE_BUCKET'),
-    "messagingSenderId": env('MESSAGING_SENDER_ID'),
-    "appId": env('APP_ID'),
-    "measurementId": env('MEASUREMENT_ID'),
-    "databaseURL": ""
-})
-storage = firebase.storage()
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+    def perform_create(self, serializer):
+        profile_instance = serializer.save()
+        if 'profile_pic' in self.request.FILES:
+            profile_pic_url = upload_profile_picture(self.request.FILES['profile_pic'])
+            profile_instance.profile_pic_url = profile_pic_url
+            profile_instance.save()
+
+    def perform_update(self, serializer):
+        profile_instance = serializer.save()
+        if 'profile_pic' in self.request.FILES:
+            profile_pic_url = upload_profile_picture(self.request.FILES['profile_pic'])
+            profile_instance.profile_pic_url = profile_pic_url
+            profile_instance.save()
 
 
 @api_view(['POST'])
