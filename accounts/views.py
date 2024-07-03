@@ -8,11 +8,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAdminUser
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
-from .models import Profile, storage
-from .serializers import ProfileSerializer
+from .models import Profile, storage, Account
+from .serializers import ProfileSerializer, UserSerializer
 
 from .serializers import CustomTokenObtainPairSerializer
 
@@ -59,6 +60,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
             cover_photo_url = upload_cover_photo(self.request.FILES['cover_photo'])
             profile_instance.profile_pic_url = cover_photo_url
             profile_instance.save()
+
+class UserViewset(viewsets.ModelViewSet):
+    queryset = Account.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
 
 
 @api_view(['POST'])

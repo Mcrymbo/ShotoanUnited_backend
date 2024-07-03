@@ -4,7 +4,14 @@ from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer,
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth import get_user_model
-from .models import Profile
+from .models import Profile, Account
+
+# user serializer
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Account
+        fields = ['id', 'username', 'first_name', 'last_name', 'is_deactivated', 'email', 'is_active']
 
 # profile serializers
 class ProfileSerializer(serializers.ModelSerializer):
@@ -14,7 +21,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'club',
                   'location', 'profile_pic',
                   'profile_pic_url', 'cover_photo',
-                  'cover_photo_url', ]
+                  'cover_photo_url', 'bio', 'phone_number', ]
 
 # creating new users
 User = get_user_model()

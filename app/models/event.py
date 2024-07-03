@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from accounts.models import Account
 
 
 # Create your models here.
@@ -12,15 +13,6 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
-
-class User(BaseModel):
-    """creates user models """
-    name = models.CharField(max_length=200)
-    password = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.name
-
 class Event(BaseModel):
     """ creates events model """
     name = models.CharField(max_length=200)
@@ -32,6 +24,11 @@ class Event(BaseModel):
 
     def __str__(self):
         return self.name
-    
-class Stories(BaseModel):
-    """ model for stories as told by our instructors"""    
+
+class Message(BaseModel):
+    """ records the inquiry from general public """
+    name = models.CharField(max_length=30, blank=False)
+    email = models.EmailField(verbose_name='email', max_length=60, blank=False)
+    message = models.TextField(max_length=300, blank=False)
+    reply_by = models.OneToOneField(Account, on_delete=models.CASCADE, blank=True, null=True)
+    reply = models.TextField(max_length=400, blank=True, null=True)

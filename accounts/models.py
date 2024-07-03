@@ -93,6 +93,8 @@ class Profile(models.Model):
     cover_photo= models.ImageField(upload_to='cover_pics', blank=True)
     profile_pic_url = models.URLField(max_length=200, blank=True)
     cover_photo_url = models.URLField(max_length=200, blank=True, null=True)
+    bio = models.TextField(max_length=300, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Override save method to upload profile pic to Firebase Storage
