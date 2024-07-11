@@ -84,18 +84,29 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+# if DEBUG:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+#     import dj_database_url
+#     DATABASES = {
+#         'default': dj_database_url.parse(env('DATABASE_URL'))
+#     }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sukdb',
+        'USER': 'sukadmin',
+        'PASSWORD': 'sukpas',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-else:
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(env('DATABASE_URL'))
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
