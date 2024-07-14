@@ -53,8 +53,7 @@ jobs:
 
     - name: Migrate and Collect Static Files
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-        cd ~/ShotokanUnited_backend &&
-        source venv/bin/activate &&
+        source venv/bin/activate && cd ~/ShotokanUnited_backend &&
         python3 manage.py migrate &&
         python3 manage.py collectstatic --noinput '
 
