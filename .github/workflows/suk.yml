@@ -14,7 +14,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: '3.9'
+        python-version: '3.10'
 
     - name: Install Dependencies
       run: |
@@ -56,11 +56,9 @@ jobs:
         cd ~/ShotokanUnited_backe &&
         source ../venv/bin/activate &&
         python manage.py migrate &&
-        python manage.py collectstatic --noinput
-      '
+        python manage.py collectstatic --noinput '
 
     - name: Restart Gunicorn and Nginx
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
         sudo systemctl restart gunicorn &&
-        sudo systemctl restart nginx
-      '
+        sudo systemctl restart nginx '
