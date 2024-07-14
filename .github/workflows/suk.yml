@@ -25,9 +25,9 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install -r requirements.txt
+        # python -m venv venv
+        source django_env/bin/activate
+        # pip install -r requirements.txt
 
     - name: Generate SSH directory and key
       run: |
@@ -49,7 +49,7 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ~/.ssh/deploy
         source: "."
-        target: "~/ShotokanUnited_backe/"
+        target: "~/ShotokanUnited_backend/"
         port: 22
         timeout: 30s
         command_timeout: 10m
@@ -62,7 +62,7 @@ jobs:
     - name: Migrate and Collect Static Files
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
         cd ~/ShotokanUnited_backend &&
-        source ../venv/bin/activate &&
+        source ../django_env/bin/activate &&
         python manage.py migrate &&
         python manage.py collectstatic --noinput '
 
