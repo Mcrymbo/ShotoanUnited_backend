@@ -47,17 +47,9 @@ jobs:
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_HOST }}
+        key:  ~/.ssh/deploy
         source: "."
         target: "~/ShotokanUnited_backend/"
-        port: 22
-        timeout: 30s
-        command_timeout: 10m
-        use_insecure_cipher: false
-        rm: false
-        debug: true
-        strip_components: 0
-        overwrite: true
 
     - name: Migrate and Collect Static Files
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
