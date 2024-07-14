@@ -64,11 +64,9 @@ jobs:
         cd ~/ShotokanUnited_backend &&
         source ../venv/bin/activate &&
         python manage.py migrate &&
-        python manage.py collectstatic --noinput
-      '
+        python manage.py collectstatic --noinput '
 
     - name: Restart Gunicorn and Nginx
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
         sudo systemctl restart gunicorn &&
-        sudo systemctl restart nginx
-      '
+        sudo systemctl restart nginx '
