@@ -49,13 +49,21 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         source: "."
-        target: "~/"
+        target: "~/ShotokanUnited_backend/"
 
     - name: Migrate and Collect Static Files
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
         source venv/bin/activate && cd ~/ShotokanUnited_backend &&
         python3 manage.py migrate &&
         python3 manage.py collectstatic --noinput '
+
+    - name: Install Dependencies on Server
+      run: |
+        ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
+          source ~/venv/bin/activate &&
+          cd ~/ShotokanUnited_backend &&
+          pip install -r requirements.txt'
+
 
     - name: Restart Gunicorn and Nginx
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
