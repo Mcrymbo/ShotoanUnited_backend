@@ -51,26 +51,17 @@ jobs:
         source: "."
         target: "~/ShotokanUnited_backend/"
 
-    - name: Create Virtual Environment on Server
-      run: |
-        ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-          python3 -m venv ~/venv'
-
-    - name: Debug Virtual Environment Creation
-      run: |
-        ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-          ls -l ~/venv'
 
     - name: Install Dependencies on Server
       run: |
         ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-          source ~/venv/bin/activate &&
+          source ~/ShotokanUnited_backend/venv/bin/activate &&
           pip install --upgrade pip &&
           pip install -r ~/ShotokanUnited_backend/requirements.txt'
 
     - name: Migrate and Collect Static Files
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-        source ~/venv/bin/activate &&
+        source ~/ShotokanUnited_backend/venv/bin/activate &&
         cd ~/ShotokanUnited_backend &&
         python3 manage.py migrate &&
         python3 manage.py collectstatic --noinput'
