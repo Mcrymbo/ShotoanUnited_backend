@@ -12,6 +12,22 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ['id', 'username', 'first_name', 'last_name', 'is_deactivated', 'email', 'is_active']
+    
+    def validate(self, data):
+        request = self.context.get('request', None)
+        if request and request.method in ['PUT', 'PATCH']:
+            user_id = self.instance.id  # The ID of the user being edited
+            username = data.get('username')
+
+            # Ensure username is provided
+            if not username:
+                raise serializers.ValidationError("Username is required")
+
+            # Handle the case where the username already exists for another user
+            if Account.objects.filter(username=username).exclude(id=user_id).exists():
+                raise serializers.ValidationError("Account with this username already exists")
+
+        return data
 
 # profile serializers
 class ProfileSerializer(serializers.ModelSerializer):

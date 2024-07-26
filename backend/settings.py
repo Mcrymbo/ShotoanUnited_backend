@@ -18,7 +18,8 @@ environ.Env.read_env()
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=True)
+# DEBUG = env.bool('DEBUG', default=True)
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -49,6 +50,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://shotokan-united-frontend.vercel.app',
     'http://localhost:5173',
     'http://157.245.98.236',
+    'https://shotokanunitedkenya.org'
 ]
 
 MIDDLEWARE = [

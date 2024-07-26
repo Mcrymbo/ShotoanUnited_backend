@@ -65,6 +65,26 @@ class UserViewset(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
+    lookup_field = 'id'
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        user_id = kwargs.get('id')
+        
+        try:
+            instance = self.get_object()
+        except Account.DoesNotExist:
+            return Response({"error": "Account with this ID does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        
+        return Response(serializer.data)
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
 
 @api_view(['POST'])
