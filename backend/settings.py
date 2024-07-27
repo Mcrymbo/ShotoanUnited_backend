@@ -53,7 +53,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://shotokan-united-frontend.vercel.app',
     'http://localhost:5173',
     'http://157.245.98.236',
-    'https://shotokanunitedkenya.org'
+    'https://shotokanunitedkenya.org',
+    'https://www.shotokanunitedkenya.org',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
