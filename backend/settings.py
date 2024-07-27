@@ -186,7 +186,7 @@ DJOSER = {
     }
 }
 
-DOMAIN = 'localhost:5173'
+DOMAIN = 'shotokanunitedkenya.org'
 SITE_NAME = 'suk'
 
 # LOGGING = {
