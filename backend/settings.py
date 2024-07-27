@@ -18,8 +18,7 @@ environ.Env.read_env()
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = env.bool('DEBUG', default=True)
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = ['*']
 
@@ -51,6 +50,12 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://157.245.98.236',
     'https://shotokanunitedkenya.org'
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://.*\.org$',
 ]
 
 MIDDLEWARE = [
