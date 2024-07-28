@@ -23,7 +23,8 @@ DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = [
     'shotokanunitedkenya.org',
     'www.shotokanunitedkenya.org',
-    '157.245.98.236'
+    '157.245.98.236',
+    '127.0.0.1'
 ]
 
 # Application definition
@@ -55,6 +56,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://157.245.98.236',
     'https://shotokanunitedkenya.org',
     'https://www.shotokanunitedkenya.org',
+    'http://127.0.0.1',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -192,15 +194,17 @@ DJOSER = {
 DOMAIN = 'shotokanunitedkenya.org'
 SITE_NAME = 'suk'
 
-# Security settings for production
-SECURE_SSL_REDIRECT = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 3600
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# # Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Logging configuration
 LOGGING = {
