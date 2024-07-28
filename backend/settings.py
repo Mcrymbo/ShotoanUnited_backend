@@ -71,6 +71,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+ADMIN_URL = 'backend/admin/'
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
