@@ -53,11 +53,26 @@ class MyAccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser):
+    """ Defines custom user """
+
+    ADMIN1 = 1
+    ADMIN2 = 2
+    ADMIN3 = 3
+    GUEST = 4
+
+    ROLES = [
+        (ADMIN1, 'Admin1'),
+        (ADMIN2, 'Admin2'),
+        (ADMIN3, 'Admin3'),
+        (GUEST, 'Guest'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(verbose_name='email', max_length=60, unique=True)
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
+    role = models.PositiveSmallIntegerField(choices=ROLES, default=GUEST)
     last_login = models.DateTimeField(verbose_name='last login', auto_now_add=True)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now=True)
     is_active = models.BooleanField(default=True)
@@ -71,7 +86,7 @@ class Account(AbstractBaseUser):
     objects = MyAccountManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name',]
 
     def __str__(self):
         return self.username

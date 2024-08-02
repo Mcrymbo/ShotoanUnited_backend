@@ -24,7 +24,8 @@ ALLOWED_HOSTS = [
     'shotokanunitedkenya.org',
     'www.shotokanunitedkenya.org',
     '157.245.98.236',
-    '127.0.0.1'
+    'localhost',
+    '127.0.0.1',
 ]
 
 # Application definition

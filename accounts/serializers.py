@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ['id', 'username', 'first_name', 'last_name', 'is_deactivated', 'email', 'is_active']
+        fields = ['id', 'username', 'first_name', 'last_name', 'role', 'email', 'is_active']
     
     def validate(self, data):
         request = self.context.get('request', None)
@@ -46,7 +46,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
     class Meta(BaseUserCreateSerializer.Meta):
         fields = ['id', 'username', 'password', 'first_name', 'last_name',
-                  'email', ]
+                  'email', 'role' ]
 
     # you can grab the created user and do something with them here
     def create(self, validated_data):
@@ -66,6 +66,7 @@ class UserSerializer(BaseUserSerializer):
                   'is_active',
                   'is_deactivated',
                   'profile',
+                  'role',
                   ]
     
     def get_profile(self, obj):

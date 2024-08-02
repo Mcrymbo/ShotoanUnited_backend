@@ -16,6 +16,8 @@ urlpatterns = [
     path('backend/api/', include('backend.api.urls')),
     path('backend/activate/', include('app.urls')),
     path('', include('app.urls')),
+    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
 ]
 
 if settings.DEBUG:
