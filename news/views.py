@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .serializers import NewsSerializers
-from rest_framework import ViewSets
+from rest_framework import viewsets
 from accounts.models import storage
 from .models import News
 
@@ -13,7 +13,7 @@ def upload_cover_image(cover_image):
         url = storage.child(f"news_cover_images/{cover_image.name}").get_url(None)
         return url
     
-class NewsViewSets(ViewSets.ModelViewSet):
+class NewsViewSets(viewsets.ModelViewSet):
     """ viewset for handling ends points to news """
     queryset = News.objects.all()
     serializer_class = NewsSerializers

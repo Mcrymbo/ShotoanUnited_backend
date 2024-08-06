@@ -7,11 +7,15 @@ from accounts.models import storage
 # Create your models here.
 class News(models.Model):
     """ Model for News """
+
+    class Meta:
+        ordering = ['created_at']
+
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     title = models.CharField(max_length=50)
     date = models.DateField(verbose_name='target date')
-    created = models.DateField(verbose_name='date created', auto_now_add=True)
-    updated = models.DateField(verbose_name='date updated', auto_now=True)
+    created_at = models.DateField(verbose_name='date created', auto_now_add=True)
+    updated_at = models.DateField(verbose_name='date updated', auto_now=True)
     description = models.TextField(max_length=300)
     cover_image = models.ImageField(upload_to='news_cover', blank=True, null=True)
     cover_image_url = models.CharField(max_length=200, blank=True, null=True)
