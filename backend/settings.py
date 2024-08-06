@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'app',
     'accounts',
     'rest_framework_simplejwt',
+    'news'
 ]
 
 AUTH_USER_MODEL = 'accounts.Account'

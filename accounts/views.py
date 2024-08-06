@@ -1,14 +1,11 @@
-from django.contrib.auth import get_user_model, authenticate, login
-from django.shortcuts import render
-from rest_framework import permissions, viewsets, status
+from django.contrib.auth import get_user_model
+from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import get_user_model
-from rest_framework.permissions import IsAdminUser
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
