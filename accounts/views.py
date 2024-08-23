@@ -61,7 +61,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
 class UserViewset(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = UserSerializer
-    permission_classes = []
     lookup_field = 'id'
 
     def update(self, request, *args, **kwargs):

@@ -1,0 +1,16 @@
+# /etc/systemd/system/daphne.service
+[Unit]
+Description=Daphne ASGI server
+After=network.target
+
+[Service]
+User=croco
+Group=www-data
+WorkingDirectory=/home/croco/ShotokanUnited_backend
+Environment="PATH=/home/croco/ShotokanUnited_backend/venv/bin"
+ExecStart=/home/croco/.local/bin/daphne -u /run/daphne/daphne.sock backend.asgi:application
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

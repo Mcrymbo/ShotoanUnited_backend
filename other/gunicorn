@@ -1,0 +1,15 @@
+# /etc/systemd/system/gunicorn.service
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=croco
+Group=www-data
+WorkingDirectory=/home/croco/ShotokanUnited_backend
+Environment="PATH=/home/croco/ShotokanUnited_backend/venv/bin"
+Environment="PYTHONPATH=/home/croco/ShotokanUnited_backend"
+ExecStart=/home/croco/.local/bin/gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 300 backend.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
