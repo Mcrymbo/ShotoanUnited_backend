@@ -26,7 +26,6 @@ djoser==2.2.3
 filelock==3.14.0
 gcloud==0.18.3
 googleapis-common-protos==1.63.1
-gyp==0.1
 httplib2==0.20.2
 hyperlink==21.0.0
 idna==3.7
