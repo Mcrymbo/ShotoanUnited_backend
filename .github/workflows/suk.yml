@@ -57,7 +57,7 @@ jobs:
         ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
           source ~/ShotokanUnited_backend/venv/bin/activate &&
           pip install --upgrade pip &&
-          pip install -r ~/ShotokanUnited_backend/requirements.txt'
+          pip install -r ~/ShotokanUnited_backend/requirements.txt --break-system-packages'
 
     - name: Migrate and Collect Static Files
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
