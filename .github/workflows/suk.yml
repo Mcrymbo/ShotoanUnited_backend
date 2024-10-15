@@ -68,6 +68,6 @@ jobs:
 
     - name: Restart Gunicorn and Nginx
       run: ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-        systemctl restart gunicorn &&
-        systemctl restart daphne &&
-        systemctl restart nginx'
+        sudo systemctl restart gunicorn &&
+        sudo systemctl restart daphne &&
+        sudo systemctl restart nginx'
