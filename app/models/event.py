@@ -30,7 +30,7 @@ class Event(BaseModel):
         super().save(*args, **kwargs)
     
     def get_registration_link(self):
-        return f"https://shotokanunitedkenya.org/backend/register/{self.slug}"
+        return f"https://shotokanunitedkenya.org/register/{self.slug}"
 
     def __str__(self):
         return self.name

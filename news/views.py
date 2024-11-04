@@ -3,6 +3,7 @@ from .serializers import NewsSerializers
 from rest_framework import viewsets
 from accounts.models import storage
 from .models import News
+from .signals import create_whatsapp_share_link
 
 # Create your views here.
 
