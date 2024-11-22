@@ -1,7 +1,7 @@
 import uuid
 from django.core.files.base import ContentFile
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 import pyrebase
 import environ
 
@@ -21,7 +21,7 @@ firebase = pyrebase.initialize_app({
 storage = firebase.storage()
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, username, first_name=None, last_name=None, password=None):
+    def create_user(self, email, first_name=None, last_name=None, password=None):
         if not email:
             raise ValueError("User must have an email.")
         if not username:
@@ -29,7 +29,6 @@ class MyAccountManager(BaseUserManager):
         
         user = self.model(
             email=self.normalize_email(email.lower()),
-            username=username,
             first_name=first_name,
             last_name=last_name,
         )
@@ -37,10 +36,9 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, email, username, first_name=None, last_name=None, password=None):
+    def create_superuser(self, email, first_name=None, last_name=None, password=None):
         user = self.create_user(
             email=email,
-            username=username,
             first_name=first_name,
             last_name=last_name,
             password=password,
@@ -52,7 +50,7 @@ class MyAccountManager(BaseUserManager):
         return user
 
 
-class Account(AbstractBaseUser):
+class Account(AbstractUser):
     """ Defines custom user """
 
     ADMIN1 = 1
@@ -69,16 +67,11 @@ class Account(AbstractBaseUser):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(verbose_name='email', max_length=60, unique=True)
-    username = models.CharField(max_length=30, unique=True)
+    username = None
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
+    fullname = models.CharField(max_length=250, blank=True, null=True)
     role = models.PositiveSmallIntegerField(choices=ROLES, default=GUEST)
-    last_login = models.DateTimeField(verbose_name='last login', auto_now_add=True)
-    date_joined = models.DateTimeField(verbose_name='date joined', auto_now=True)
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
     profile_image = models.CharField(max_length=255, null=True, blank=True, default='')
     hide_email = models.BooleanField(default=True)
     is_deactivated = models.BooleanField(default=False)
@@ -86,16 +79,20 @@ class Account(AbstractBaseUser):
     objects = MyAccountManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name',]
+    REQUIRED_FIELDS = ['first_name', 'last_name',]
 
     def __str__(self):
-        return self.username
+        return self.fullname
     
     def has_perm(self, perm, obj=None):
-        return self.is_admin
+        return self.is_staff
     
     def has_module_perms(self, app_label):
-        return self.is_admin
+        return self.is_staff
+    
+    @property
+    def fullname(self):
+        return f"{self.first_name or ''} {self.last_name or ''}".strip()
 
 
 class Profile(models.Model):
