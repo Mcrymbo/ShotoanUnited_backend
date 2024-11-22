@@ -4,7 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import NewsSerializers, CommentSerializer
 from rest_framework import viewsets, status
+from rest_framework.permissions import AllowAny
 from accounts.models import storage
+from django.db import transaction
 from .models import News, Like, Comment
 from .signals import create_whatsapp_share_link
 
@@ -66,17 +68,42 @@ class NewsViewSets(viewsets.ModelViewSet):
             return Response({"Error": "news item not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-
 class LikeNewsView(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request, pk):
-        news = News.objects.get(pk=pk)
-        like, created = Like.objects.get_or_create(user=request.user, news=news)
+        try:
+            # Fetch the News object by primary key (pk)
+            news = News.objects.get(pk=pk)
+        except News.DoesNotExist:
+            raise NotFound("News Item not found")
 
-        if not created:
-            like.delete()
-            return Response({"message": "unliked news"}, status=200)
-        return Response({"message": "liked news"}, status=201)
+        # Handle session ID for unauthenticated users
+        session_id = request.session.session_key
+        if not session_id:
+            request.session.create()
+            session_id = request.session.session_key
+
+        with transaction.atomic():
+            # Check if the user is authenticated
+            if request.user.is_authenticated:
+                # For authenticated users, associate the like with the user
+                like, created = Like.objects.get_or_create(user=request.user, news=news)
+            else:
+                # For unauthenticated users, associate the like with the session
+                like, created = Like.objects.get_or_create(session_id=session_id, news=news)
+
+            if created:
+                # If the like was created, increment the like count
+                news.likes_count += 1
+                news.save(update_fields=['likes_count'])
+                return Response({"message": "Liked the news", "likes_count": news.likes_count}, status=201)
+            else:
+                # If the like already exists, remove it (unlike the news)
+                like.delete()
+                news.likes_count -= 1  # Decrease the like count if the like is removed
+                news.save(update_fields=['likes_count'])
+                return Response({"message": "Unliked the news", "likes_count": news.likes_count}, status=200)
 
 class CommentsNewsView(APIView):
 

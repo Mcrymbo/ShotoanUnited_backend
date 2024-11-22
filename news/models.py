@@ -22,7 +22,7 @@ class News(models.Model):
     description = models.TextField(max_length=300)
     author = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)    
     content = models.TextField(null=True, blank=True)
-
+    likes_count = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
@@ -67,15 +67,25 @@ class NewsImage(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     news = models.ForeignKey('News', on_delete=models.CASCADE, related_name='likes')
+    session_id = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'news')
+        unique_together = ('user', 'news', 'session_id')
+
+    def save(self, *args, **kwargs):
+        if self.user:
+            if Like.objects.filter(user=self.user, news=self.news).exists():
+                return
+        else:
+            if Like.obkects.filter(session_id=self.session_id, news=self.news).exists():
+                return
+        super().save(*args, **kwargs)
 
 class Comment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     news = models.ForeignKey('News', on_delete=models.CASCADE, related_name='comments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

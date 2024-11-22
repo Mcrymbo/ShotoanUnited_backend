@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from app.api.urls import event_router, message_router
 from accounts.urls import profile_router, user_router
 from news.urls import news_router
+from news.views import LikeNewsView, CommentsNewsView
 from django.urls import path, include
 
 router = DefaultRouter()
@@ -13,5 +14,7 @@ router.registry.extend(user_router.registry)
 router.registry.extend(news_router.registry)
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
+    path('news/<uuid:pk>/like/', LikeNewsView.as_view(), name='like'),
+    path('news/<uuid:pk>/comment/', CommentsNewsView.as_view(), name='comment'),
 ]

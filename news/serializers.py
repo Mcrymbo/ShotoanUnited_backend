@@ -11,7 +11,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class NewsImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewsImage
-        filds = ['id', 'image', 'image_url']
+        fields = ['id', 'image', 'image_url']
 
     def create(self, validated_data):
         """ triggers firebase upload """
@@ -24,7 +24,6 @@ class NewsImageSerializer(serializers.ModelSerializer):
 class NewsSerializers(serializers.ModelSerializer):
     registration_link = serializers.SerializerMethodField()
     author = serializers.CharField(source='author.fullname', read_only=True)
-    likes_count = serializers.IntegerField(source='likes.count', read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
     images = NewsImageSerializer(many=True, required=False)
 
