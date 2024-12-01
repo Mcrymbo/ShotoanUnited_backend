@@ -55,7 +55,7 @@ jobs:
     - name: Install Dependencies on Server
       run: |
         ssh -i ~/.ssh/deploy ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-          source ~/ShotokanUnited_backend/venv/bin/activate &&
+          source ~/ShotokanUnited_backend/venv/bin/activate && cat requirements.system | xargs sudo aptitude install &&
           pip install --upgrade pip --break-system-packages &&
           pip install -r ~/ShotokanUnited_backend/requirements.txt --break-system-packages'
 
