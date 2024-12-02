@@ -49,6 +49,10 @@ This is the backend for the Shotokan United website, built using Django and Djan
 
 3. **Install dependencies**:
     ```bash
+    # Install system depencences by running
+    cat ~/project/install/requirements.system | xargs sudo aptitude install
+    # OR
+    cat ~/project/install/requirements.system | xargs sudo apt install
     pip install -r requirements.txt
     ```
 

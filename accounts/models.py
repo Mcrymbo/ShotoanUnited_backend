@@ -24,8 +24,6 @@ class MyAccountManager(BaseUserManager):
     def create_user(self, email, first_name=None, last_name=None, password=None):
         if not email:
             raise ValueError("User must have an email.")
-        if not username:
-            raise ValueError("User must have a username")
         
         user = self.model(
             email=self.normalize_email(email.lower()),

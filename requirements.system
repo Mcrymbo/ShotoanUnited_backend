@@ -1,0 +1,6 @@
+build-essential
+python3-dev
+libdbus-1-dev
+libgirepository1.0-dev
+ilibcairo2-dev
+uuid-dev
