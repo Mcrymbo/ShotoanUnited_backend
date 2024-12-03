@@ -43,6 +43,9 @@ class News(models.Model):
     @property
     def comment_count(self):
         return self.comments.count()
+    
+    def __str__(self):
+        return self.title
 
 
 class NewsImage(models.Model):

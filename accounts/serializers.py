@@ -11,20 +11,20 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ['id', 'username', 'first_name', 'last_name', 'role', 'email', 'is_active']
+        fields = ['id', 'first_name', 'last_name', 'role', 'email', 'is_active']
     
     def validate(self, data):
         request = self.context.get('request', None)
         if request and request.method in ['PUT', 'PATCH']:
             user_id = self.instance.id  # The ID of the user being edited
-            username = data.get('username')
+            email = data.get('email')
 
             # Ensure username is provided
-            if not username:
+            if not email:
                 raise serializers.ValidationError("Username is required")
 
             # Handle the case where the username already exists for another user
-            if Account.objects.filter(username=username).exclude(id=user_id).exists():
+            if Account.objects.filter(username=email).exclude(id=user_id).exists():
                 raise serializers.ValidationError("Account with this username already exists")
 
         return data
@@ -62,7 +62,6 @@ class UserSerializer(BaseUserSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         fields = ['id', 'first_name',
                   'last_name', 'email',
-                  'username',
                   'is_active',
                   'is_deactivated',
                   'profile',
@@ -78,9 +77,9 @@ class UserSerializer(BaseUserSerializer):
     # this is where we send a request to slash me/ or auth/users
     def validate(self, attrs):
         validated_attr = super().validate(attrs)
-        username = validated_attr.get('username')
+        email = validated_attr.get('email')
 
-        user = User.objects.get(username=username)
+        user = User.objects.get(email=email)
 
         if user.is_deactivated:
             raise ValidationError(
@@ -121,7 +120,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data.update({
             'id': obj.id, 'first_name': obj.first_name,
             'last_name': obj.last_name, 'email': obj.email,
-            'username': obj.username,
             'is_active': obj.is_active,
             'is_deactivated': obj.is_deactivated,
         })
