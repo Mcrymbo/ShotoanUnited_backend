@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework_simplejwt',
     'channels',
+    'nested_admin',
 
 
     'app',
     'accounts',
     'news',
+    'blog',
     'notification',
 ]
 

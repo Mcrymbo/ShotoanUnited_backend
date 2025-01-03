@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import News, Like, Comment, NewsImage
+from .models import News, Like, Comment, NewsImage, Category
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -7,6 +7,10 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'user', 'content', 'created_at']
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
 
 class NewsImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,16 +28,16 @@ class NewsImageSerializer(serializers.ModelSerializer):
 class NewsSerializers(serializers.ModelSerializer):
     registration_link = serializers.SerializerMethodField()
     author = serializers.CharField(source='author.fullname', read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
+    # comments = CommentSerializer(many=True, read_only=True)
     images = NewsImageSerializer(many=True, required=False)
+    category = serializers.CharField(source="category.name", read_only=True)
 
     class Meta:
         model = News
-        fields = ['id', 'title', 'slug', 'date',
-                  'created_at', 'description',
-                  'registration_link', 'views',
-                  'author', 'content', 'likes_count',
-                  'comments', 'comment_count', 'images']
+        fields = ['id', 'title', 'slug', 'date', 'is_featured',
+                  'created_at', 'description', 'is_trending',
+                  'registration_link', 'author', 'content',
+                  "category", 'images']
 
     def create(self, validated_data):
         """ used to create news with multiple images """

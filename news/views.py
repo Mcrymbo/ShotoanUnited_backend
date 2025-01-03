@@ -8,6 +8,8 @@ from rest_framework.permissions import AllowAny
 from accounts.models import storage
 from django.db import transaction
 from .models import News, Like, Comment
+from datetime import timedelta
+from django.utils.timezone import now
 from .signals import create_whatsapp_share_link
 
 # Create your views here.
@@ -37,6 +39,26 @@ class NewsViewSets(viewsets.ModelViewSet):
             cover_image_url = upload_cover_image(self.request.FILES['cover_image'])
             news_instance.cover_image_url = cover_image_url
             news_instance.save()
+    
+    def update_trending_news(self):
+        """Automatically update the trending status based on defined criteria."""
+        # Define your threshold values
+        views_threshold = 10
+        likes_threshold = 10
+        recency_days = 7
+
+        # Identify articles that meet the trending criteria
+        trending_news = News.objects.filter(
+            views__gte=views_threshold,  # High views
+            # likes_count__gte=likes_threshold,  # High likes
+            date__gte=now() - timedelta(days=recency_days)  # Recent
+        )
+
+        # Mark all articles as not trending
+        News.objects.filter(is_trending=True).update(is_trending=False)
+
+        # Mark selected articles as trending
+        trending_news.update(is_trending=True)
 
     def retrieve(self, request, *args, **kwargs):
         try:

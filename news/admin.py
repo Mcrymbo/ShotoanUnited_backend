@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import News, Like, Comment, NewsImage
+from .models import News, Like, Comment, NewsImage, Category
 
 # Register your models here.
 
@@ -21,3 +21,4 @@ class NewsAdmin(admin.ModelAdmin):
 admin.site.register(News, NewsAdmin)
 admin.site.register(Like)
 admin.site.register(Comment)
+admin.site.register(Category)
