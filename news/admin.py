@@ -7,8 +7,7 @@ class NewsImageInline(admin.StackedInline):
     """ inline admin for images """
     model = NewsImage
     extra = 1
-    field = ['image', 'image_url']
-    readonly_fields = ['image_url']
+    fields = ['image',]
 
 class NewsAdmin(admin.ModelAdmin):
     list_display = ['title', 'description', 'content', 'date', 'views']

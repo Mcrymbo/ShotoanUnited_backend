@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'news',
     'blog',
     'notification',
+    'clubs',
 ]
 
 AUTH_USER_MODEL = 'accounts.Account'

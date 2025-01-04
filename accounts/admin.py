@@ -1,8 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Account
+from .models import Account, Profile
 
 # Register your models here.
+class ProfileInline(admin.StackedInline):
+    """ inline admin for images """
+    model = Profile
+    extra = 1
+    fields = ['profile_pic', 'cover_photo', 'bio', 'phone_number']
+
+
 class AccountAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -22,8 +29,6 @@ class AccountAdmin(UserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
-    filter_horizontal = ()
-    list_filter = ()
-    fieldsets = ()
+    inlines = [ProfileInline]
 
 admin.site.register(Account, AccountAdmin)

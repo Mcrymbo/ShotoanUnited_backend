@@ -51,15 +51,15 @@ class MyAccountManager(BaseUserManager):
 class Account(AbstractUser):
     """ Defines custom user """
 
-    ADMIN1 = 1
-    ADMIN2 = 2
-    ADMIN3 = 3
+    ADMIN = 1
+    COACH = 2
+    PLAYER = 3
     GUEST = 4
 
     ROLES = [
-        (ADMIN1, 'Admin1'),
-        (ADMIN2, 'Admin2'),
-        (ADMIN3, 'Admin3'),
+        (ADMIN, 'Admin'),
+        (COACH, 'Coach'),
+        (PLAYER, 'Player'),
         (GUEST, 'Guest'),
     ]
 
@@ -97,8 +97,6 @@ class Profile(models.Model):
     """ define the profile of a user """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(Account, null=True, on_delete=models.CASCADE)
-    club = models.CharField(max_length=20, blank=True)
-    location = models.CharField(max_length=30, blank=True)
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True)
     cover_photo= models.ImageField(upload_to='cover_pics', blank=True)
     profile_pic_url = models.URLField(max_length=200, blank=True)
