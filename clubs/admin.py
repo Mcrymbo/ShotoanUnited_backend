@@ -17,7 +17,7 @@ class CoachAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2'),
+            'fields': ('email', 'password1', 'password2', 'certifications'),
         }),
     )
 
@@ -39,7 +39,7 @@ class PlayerAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2'),
+            'fields': ('email', 'password1', 'password2', 'belt_rank'),
         }),
     )
 
