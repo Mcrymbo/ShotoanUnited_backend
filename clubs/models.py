@@ -35,3 +35,17 @@ class Player(Account):
     class Meta:
         db_table = 'players'
 
+class RegistrationToken(models.Model):
+    user_type_choices = [
+        ('coach', 'Coach'),
+        ('player', 'Player'),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    user_type = models.CharField(choices=user_type_choices, max_length=10)
+    dojo = models.ForeignKey('Dojo', on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user_type} - {self.token}"

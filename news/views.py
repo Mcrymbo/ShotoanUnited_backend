@@ -9,6 +9,7 @@ from accounts.models import storage
 from django.db import transaction
 from .models import News, Like, Comment
 from datetime import timedelta
+from rest_framework.exceptions import NotFound
 from django.utils.timezone import now
 from .signals import create_whatsapp_share_link
 

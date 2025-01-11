@@ -143,6 +143,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+APPEND_SLASH=True
+
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env('EMAIL_HOST')
@@ -170,13 +172,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 50,
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+    }
 }
 
 # Simple JWT settings config
@@ -198,7 +208,12 @@ DJOSER = {
     }
 }
 
-DOMAIN = 'shotokanunitedkenya.org'
+if DEBUG:
+    DOMAIN = 'http://localhost:5173'
+else:
+    DOMAIN = 'www.shotokanunitedkenya.org'
+
+
 SITE_NAME = 'suk'
 
 

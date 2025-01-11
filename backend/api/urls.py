@@ -6,6 +6,7 @@ from blog.urls import blog_router, category_router
 from news.urls import news_router
 from news.views import LikeNewsView, CommentsNewsView
 from django.urls import path, include
+from clubs.views import GenerateRegistrationLinkAPIView, RegisterAPIView
 
 router = DefaultRouter()
 router.registry.extend(event_router.registry)
@@ -20,4 +21,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('news/<uuid:pk>/like/', LikeNewsView.as_view(), name='like'),
     path('news/<uuid:pk>/comment/', CommentsNewsView.as_view(), name='comment'),
+    path('generate-token/', GenerateRegistrationLinkAPIView.as_view(), name='generate-token'),
+    path('register/<uuid:token>/', RegisterAPIView.as_view(), name='register'),
 ]

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Coach, Dojo, Player
+from .models import Coach, Dojo, Player, RegistrationToken
 from accounts.admin import ProfileInline
 
 # Register your models here.
@@ -50,3 +50,4 @@ class PlayerAdmin(UserAdmin):
 admin.site.register(Coach, CoachAdmin)
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Dojo)
+admin.site.register(RegistrationToken)
